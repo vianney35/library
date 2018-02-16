@@ -30,4 +30,12 @@ export class DataProvider {
       return this.http.get<any>(`${this.url}${ressource}`, { params: params })
                       .map((data) => data.items.map(book => new Book(book)))
   }
+
+  /**
+   * Get a book
+   */
+  getBookById(id: string): Observable<Book> {
+    const ressource =  'volumes/';
+    return this.http.get<any>(`${this.url}${ressource}${id}`).map((data) => new Book(data))
+  }
 }

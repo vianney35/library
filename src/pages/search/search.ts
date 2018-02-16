@@ -3,22 +3,34 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { DataProvider } from '../../providers/data/data';
 import { Book } from '../../models/book.model';
 
+/**
+ * Generated class for the SearchPage page.
+ *
+ * See https://ionicframework.com/docs/components/#navigation for more info on
+ * Ionic pages and navigation.
+ */
+
 @IonicPage({
-  name: 'home',
-  segment: 'home',
+  name: 'search',
+  segment: 'search',
 })
 @Component({
-  selector: 'page-home',
-  templateUrl: 'home.html'
+  selector: 'page-search',
+  templateUrl: 'search.html',
 })
-export class HomePage {
+export class SearchPage {
   q: string = '';
   items: Book[];
   start = 0;
   limit = 10;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams public dataProvider: DataProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public dataProvider: DataProvider) {
+  }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad SearchPage');
     this.items = [];
+
   }
 
   getItems(ev: any) {
@@ -52,6 +64,10 @@ export class HomePage {
         infiniteScroll.complete();
       }
     );
+  }
+
+  go(book: Book){
+    this.navCtrl.push('book', {id: book.id});
   }
 
 }
