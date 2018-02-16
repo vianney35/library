@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { DataProvider } from '../../providers/data/data';
+import { LibraryProvider } from '../../providers/library/library';
 import { Book } from '../../models/book.model';
 
 /**
@@ -23,19 +24,33 @@ export class BookPage {
   id: string;
   book: Book;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public dataProvider: DataProvider) {
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams,
+              public dataProvider: DataProvider,
+              public libraryProvider: LibraryProvider
+            ) {
     this.id = navParams.get('id');
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad BookPage');
-
     this.dataProvider.getBookById(this.id).subscribe(
       (book) => {
-        console.log(book)
+        console.log(book);
+        this.book = book;
     },
       (err) => console.error(err)
     );
   }
 
+  add() {
+    this.libraryProvider.add(this.book)
+  }
+
+  remove() {
+    this.libraryProvider.remove(this.book)
+  }
+
+  isInLibrary() {
+    this.libraryProvider.isIn(this.book)
+  }
 }

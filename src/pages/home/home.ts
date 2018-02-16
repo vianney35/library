@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { DataProvider } from '../../providers/data/data';
+import { LibraryProvider } from '../../providers/library/library';
 import { Book } from '../../models/book.model';
 
-@IonicPage({
-  name: 'home',
-  segment: 'home',
-})
+@IonicPage()
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -17,7 +16,12 @@ export class HomePage {
   start = 0;
   limit = 10;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams public dataProvider: DataProvider) {
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams,
+              public dataProvider: DataProvider,
+              public libraryProvider: LibraryProvider,
+              private barcodeScanner: BarcodeScanner
+            ) {
     this.items = [];
   }
 
@@ -54,4 +58,17 @@ export class HomePage {
     );
   }
 
+  go(book: Book){
+    this.navCtrl.push('book', {id: book.id});
+  }
+
+  scan(){
+    console.log('start scan');
+
+    this.barcodeScanner.scan().then((barcodeData) => {
+      alert(barcodeData);
+     }, (err) => {
+      alert('Error scan');
+     });
+  }
 }

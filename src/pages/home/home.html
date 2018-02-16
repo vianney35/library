@@ -4,9 +4,25 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Home</ion-title>
+    <ion-buttons end>
+        <button ion-button icon-only (click)="scan()">
+          <ion-icon name="qr-scanner"></ion-icon>
+        </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  Home
+    <h2> My library </h2>
+
+    <ion-list>
+        <ion-item  *ngFor="let book of libraryProvider.get()">
+          <ion-thumbnail item-start>
+              <img src="{{book.thumbnail}}" />
+          </ion-thumbnail>
+          <h2>{{ book.title }}</h2>
+          <p> {{ book.description }}</p>
+          <button ion-button clear item-end (click)="go(book)">View</button>
+        </ion-item>
+    </ion-list>
 </ion-content>
