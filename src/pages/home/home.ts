@@ -4,7 +4,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { DataProvider } from '../../providers/data/data';
 import { LibraryProvider } from '../../providers/library/library';
 import { Book } from '../../models/book.model';
-
+import { ToastController } from 'ionic-angular';
 @IonicPage()
 @Component({
   selector: 'page-home',
@@ -20,7 +20,8 @@ export class HomePage {
               public navParams: NavParams,
               public dataProvider: DataProvider,
               public libraryProvider: LibraryProvider,
-              private barcodeScanner: BarcodeScanner
+              private barcodeScanner: BarcodeScanner,
+              public toastCtrl: ToastController
             ) {
     this.items = [];
   }
@@ -66,9 +67,28 @@ export class HomePage {
     console.log('start scan');
 
     this.barcodeScanner.scan().then((barcodeData) => {
-      alert(barcodeData);
+      const q = `isbn:${barcodeData.text}`
+
+      this.dataProvider.search(q, 0, 1).subscribe(
+        (books) => {
+          if(books.length === 0){
+            this.presentToast(`Book with ${barcodeData.text} not found`)
+          } else {
+            this.navCtrl.push('book', {id: books[0].id});
+          }
+        },
+          (err) => this.presentToast(`Book with ${barcodeData.text} not found`)
+        );
      }, (err) => {
-      alert('Error scan');
+      this.presentToast(`Scan failed`);
      });
+  }
+
+  presentToast(text) {
+    let toast = this.toastCtrl.create({
+      message: text,
+      duration: 3000
+    });
+    toast.present();
   }
 }
